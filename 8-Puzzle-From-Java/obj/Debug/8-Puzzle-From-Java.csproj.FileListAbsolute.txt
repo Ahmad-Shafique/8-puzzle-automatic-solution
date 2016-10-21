@@ -1,0 +1,6 @@
+B:\Projects\Visual Studio\C#\8-Puzzle-From-Java\8-Puzzle-From-Java\bin\Debug\8-Puzzle-From-Java.exe.config
+B:\Projects\Visual Studio\C#\8-Puzzle-From-Java\8-Puzzle-From-Java\bin\Debug\8-Puzzle-From-Java.exe
+B:\Projects\Visual Studio\C#\8-Puzzle-From-Java\8-Puzzle-From-Java\bin\Debug\8-Puzzle-From-Java.pdb
+B:\Projects\Visual Studio\C#\8-Puzzle-From-Java\8-Puzzle-From-Java\obj\Debug\8-Puzzle-From-Java.exe
+B:\Projects\Visual Studio\C#\8-Puzzle-From-Java\8-Puzzle-From-Java\obj\Debug\8-Puzzle-From-Java.pdb
+B:\Projects\Visual Studio\C#\8-Puzzle-From-Java\8-Puzzle-From-Java\obj\Debug\8-Puzzle-From-Java.csprojResolveAssemblyReference.cache
