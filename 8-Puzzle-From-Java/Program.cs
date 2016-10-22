@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Diagnostics;
 
 //Priority Queue highly unoptimized. Only for single use
 //Can become much more optimized if linked list is used inside priority queue
 
 namespace _8_Puzzle_From_Java
 {
+
     /// <summary>
     /// HashSet coding starts here
     /// </summary>
@@ -31,14 +32,14 @@ namespace _8_Puzzle_From_Java
             ulong hash = GetHashCode(mca);
             int i = new int();
 
-            if(numberOfElements>1)
+            if (numberOfElements > 1)
             {
                 int index = binarySearch(hash, 0, numberOfElements - 1);
                 //Console.WriteLine("Index number is " + index);
                 bool flag = false;
-                if(index == -1)
+                if (index == -1)
                 {
-                    for(i=0; i<numberOfElements; i++)
+                    for (i = 0; i < numberOfElements; i++)
                     {
                         if (!flag)
                         {
@@ -55,7 +56,7 @@ namespace _8_Puzzle_From_Java
                             }
                         }
                     }
-                    if(i == numberOfElements && !flag)
+                    if (i == numberOfElements && !flag)
                     {
                         hashValues[numberOfElements++] = hash;
                         //Console.WriteLine("Inserted at the end " + hash + "--" + numberOfElements);
@@ -64,18 +65,22 @@ namespace _8_Puzzle_From_Java
             }
             else
             {
-                if (numberOfElements == 0) { hashValues[numberOfElements++] = hash;
-                    Console.WriteLine("Inserted as first element" +hash+"--"+numberOfElements); }
+                if (numberOfElements == 0)
+                {
+                    hashValues[numberOfElements++] = hash;
+                    //Console.WriteLine("Inserted as first element" + hash + "--" + numberOfElements);
+                }
                 else {
                     if (hash > hashValues[0])
                     {
                         hashValues[numberOfElements++] = hash;
                         //Console.WriteLine("Inserted as second element in if " + hash + "--" + numberOfElements);
                     }
-                    else { hashValues[numberOfElements++] = hashValues[0]; hashValues[0] = hash;
+                    else {
+                        hashValues[numberOfElements++] = hashValues[0]; hashValues[0] = hash;
                         //Console.WriteLine("Inserted as second element in else " + hash + "--" + numberOfElements);
                     }
-                    
+
                 }
                 return true;
             }
@@ -96,7 +101,9 @@ namespace _8_Puzzle_From_Java
         UInt64 GetHashCode(MisplacementCountedArray obj)
         {
             //throw new NotImplementedException();
-            UInt64 hc = (UInt64) obj.arrayAccessor.Length;
+            //for (int i = 0; i < 9; i++) Console.WriteLine(obj.arrayAccessor[i]);
+            Debug.Assert(obj != null);
+            UInt64 hc = (UInt64)obj.arrayAccessor.Length;
             for (int i = 0; i < obj.arrayAccessor.Length; ++i)
             {
                 hc = (hc * 11 + obj.arrayAccessor[i]);
@@ -127,7 +134,7 @@ namespace _8_Puzzle_From_Java
     /// Misplacements-Counted-Array starts here
     /// </summary>
     //Arrray with number of misplacements already counted
-    class MisplacementCountedArray 
+    class MisplacementCountedArray
     {
         public int spaceIndex;
         byte numberOfMisplacements;
@@ -135,18 +142,20 @@ namespace _8_Puzzle_From_Java
         //Constructor starts here
         public MisplacementCountedArray(byte[] arr, byte[] correctlyPositioned)
         {
-            try {
+            try
+            {
                 array = new byte[9];
                 byte nom = new byte();
                 spaceIndex = new int();
                 for (int i = 0; i < arr.Length; i++)
                 {
                     if (arr[i] != correctlyPositioned[i]) nom++;
-                    if(arr[i] == 0) spaceIndex = i;
+                    if (arr[i] == 0) spaceIndex = i;
                 }
                 numberOfMisplacements = nom;
                 Array.Copy(arr, array, 9);
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
             }
@@ -154,34 +163,38 @@ namespace _8_Puzzle_From_Java
         //Constructtor ends here
 
         //Function to access(get only) internal array
-        public byte[] arrayAccessor{get{return this.array;}}
+        public byte[] arrayAccessor { get { return array; } }
         //Function to access(get only) numberOfMisplacements
-        public byte getNumberOfMisplacements() { return numberOfMisplacements; }
+        public byte getNumberOfMisplacement { get { return numberOfMisplacements; } }
 
         //function to swap elements of an array
-        void swap(ref byte[] arr,int indexOne, int indexTwo)
+        void swap(byte[] arr, int indexOne, int indexTwo)
         {
+            Debug.Assert(arr != null);
             byte temp = arr[indexOne];
             arr[indexOne] = arr[indexTwo];
-            arr[indexTwo] = temp; 
+            arr[indexTwo] = temp;
         }
         //function to swap elements and create new state
-        MisplacementCountedArray swappedState(MisplacementCountedArray mca,int originalSpaceIndex,int newSpaceIndex)
+        MisplacementCountedArray swappedState(MisplacementCountedArray mca, int originalSpaceIndex, int newSpaceIndex)
         {
+            Debug.Assert(mca != null);
             byte[] arr = new byte[9];
-            Array.Copy(mca.arrayAccessor, arr,9);
-            swap(ref arr, originalSpaceIndex, newSpaceIndex);
+            Array.Copy(mca.arrayAccessor, arr, 9);
+            swap(arr, originalSpaceIndex, newSpaceIndex);
             MisplacementCountedArray newMCA = new MisplacementCountedArray(arr, EightPuzzleGoal.goalTiles);
             newMCA.spaceIndex = newSpaceIndex;
+            Debug.Assert(newMCA != null);
             return newMCA;
         }
 
         //----------Functions for successor states---------
+        //Successor addition taken from a java file found in the lab created by an unknown person 
         //Move down state
         public MisplacementCountedArray moveS(MisplacementCountedArray mca)
         {
             if (mca.spaceIndex > 2) return swappedState(mca, mca.spaceIndex, mca.spaceIndex - 3);
-            else return null; 
+            else return null;
         }
         //Move up state
         public MisplacementCountedArray moveN(MisplacementCountedArray mca)
@@ -192,18 +205,18 @@ namespace _8_Puzzle_From_Java
         //Move right state
         public MisplacementCountedArray moveE(MisplacementCountedArray mca)
         {
-            if (mca.spaceIndex%3 >0) return swappedState(mca, mca.spaceIndex, mca.spaceIndex - 1);
+            if (mca.spaceIndex % 3 > 0) return swappedState(mca, mca.spaceIndex, mca.spaceIndex - 1);
             else return null;
         }
         //Move left state
         public MisplacementCountedArray moveW(MisplacementCountedArray mca)
         {
-            if (mca.spaceIndex%3 <2  ) return swappedState(mca, mca.spaceIndex, mca.spaceIndex + 1);
+            if (mca.spaceIndex % 3 < 2) return swappedState(mca, mca.spaceIndex, mca.spaceIndex + 1);
             else return null;
         }
 
         //Function to print the state
-        public void print(){ Console.Write("Main state = "); for (int i = 0; i < array.Length; i += 3) Console.Write(array[i] + " " + array[i + 1] + " " + array[i + 2] + " ") ; Console.WriteLine(); }
+        public void print() { Console.Write("Main state = "); for (int i = 0; i < array.Length; i += 3) Console.Write(array[i] + " " + array[i + 1] + " " + array[i + 2] + " "); Console.WriteLine(); }
 
     }
     /// <summary>
@@ -258,82 +271,134 @@ namespace _8_Puzzle_From_Java
 
 
     /// <summary>
-    /// Misplacements-Counted-Array Container class starts here
+    /// Priority Queue class starts here
     /// </summary>
-    //Misplacements counted array container
-    class MinimumMisplacedPriorityQueueContainer
-    {
-        //private variable
-        byte nextEmptyIndex,headOfQueue;
-        //holds the new states
-        MisplacementCountedArray[] arrays;
 
-        //Constructor starts here
-        public MinimumMisplacedPriorityQueueContainer()
+    class customizedPriorityQueue<T> where T : MisplacementCountedArray
+    {
+        uint sizeOfQueue, numberOfNodes, headOfQueue;
+        T[] nodes;
+
+        //Constructor initializes the internal array with size 10
+        public customizedPriorityQueue() { nodes = new T[10]; sizeOfQueue = 10; }
+
+        //For inserting elements into the queue
+        public void Enqueue(T node)
         {
-            arrays = new MisplacementCountedArray[5];
-            nextEmptyIndex = 0;
-            headOfQueue = 0;
-        }
-        //Constructor ends here
-        //Add function starts here... Check and stores the minimum state at the top...
-        public bool add(MisplacementCountedArray mca2)
-        {
-            if (mca2 != null)
+            try
             {
-                if (nextEmptyIndex != 0)
+                //Make sure insertion index is not negative
+                if (numberOfNodes < 0) numberOfNodes = 0;
+                //Check if queue already has node/s
+                if (numberOfNodes >= 2)
                 {
-                    //Iterating through to find proper place for the new state
-                    int i;
-                    for (i = 0; i < nextEmptyIndex; i++)
+                    //If the queue already has 2 nodes :
+                    //iterate to find the right place
+                    int i = 0;
+                    for (; i < nodes.Length - 1; i++)
                     {
-                        //Place found. Placement operation to begin
-                        if (arrays[i].getNumberOfMisplacements() > mca2.getNumberOfMisplacements())
+                        //place found , break from loop
+                        if (nodes[i] != null)
                         {
-                            //Extending container size by 1
-                            nextEmptyIndex++;
-                            //moving all elements to make place
-                            for (int j = nextEmptyIndex - 1; j > i; j--)
-                            {
-                                arrays[j] = arrays[j - 1];
-                            }
-                            //placement
-                            arrays[i] = mca2;
-                            //Exiting placement operation loop
-                            return true;
+                            if (nodes[i].getNumberOfMisplacement > node.getNumberOfMisplacement) break;
                         }
                     }
-                    if (i == nextEmptyIndex) { arrays[nextEmptyIndex++] = mca2; return true; }
+                    //if the loop ended without breaking , insert at the end
+                    if (i >= numberOfNodes) { nodes[numberOfNodes++] = node; }
+                    //loop forcibly broken , move all nodes necessary and place the node
+                    else
+                    {
+                        for (int j = (int)nodes.Length - 1; j > i; j--) nodes[j] = nodes[j - 1];
+                        nodes[i] = node; numberOfNodes++;
+                    }
+
                 }
-                else { arrays[nextEmptyIndex++] = mca2; return true; }
+                //queue doesn't have more than 2 nodes
+                else
+                {
+                    //Queue empty, insert node directly
+                    if (numberOfNodes == 0) nodes[numberOfNodes++] = node;
+                    //Queue has one element , check priority and insert accordingly
+                    else
+                    {
+                        if (nodes[0].getNumberOfMisplacement > node.getNumberOfMisplacement)
+                        {
+                            nodes[1] = nodes[0];
+                            nodes[0] = node;
+                            numberOfNodes++;
+                        }
+                        else
+                        {
+                            nodes[0] = node;
+                            numberOfNodes++;
+                        }
+                    }
+                }
+                //Function to remove null element , if existing
+                checkAndFix();
             }
-            return false;
-        }
-        //Add function ends here
-
-        //Function to retrieve the leading element
-        public MisplacementCountedArray poll(){
-            while (arrays[headOfQueue] == null) headOfQueue++;
-            return arrays[headOfQueue++];
+            catch (Exception e) { Console.WriteLine(e.ToString()); Console.WriteLine("Problem enqueing elements"); }
 
         }
 
-        //Funcion to clear the queue
-        public void clear() { arrays = null; arrays = new MisplacementCountedArray[5]; }
+
+        //Increase queue size by 10
+        public void Resize()
+        {
+            try
+            {
+                sizeOfQueue += 10;
+                T[] NewArray = new T[sizeOfQueue];
+                for (int i = 0; i < nodes.Length; i++)
+                {
+                    NewArray[i] = nodes[i];
+                }
+                nodes = NewArray;
+            }
+            catch (Exception e) { Console.WriteLine(e.ToString()); Console.WriteLine("Unable to resize!!!"); }
+        }
+
+        //Return the top most element
+        public T poll() {
+            if (headOfQueue < numberOfNodes)
+            {
+                return nodes[headOfQueue++];
+            }
+            else return nodes[headOfQueue];
+        }
+
+        //reset the array
+        public void clear() { Array.Clear(nodes, 0, (int)sizeOfQueue); headOfQueue = 0; numberOfNodes = 0;  }
+
+        //Check and remove null elements
+        public void checkAndFix()
+        {
+            try
+            {
+                for (int i = 0; i < nodes.Length - 1; i++)
+                {
+                    if (nodes[i] == null)
+                    {
+                        for (int j = i; j < nodes.Length - 1; j++) nodes[j] = nodes[j + 1];
+                    }
+                }
+            }
+            catch (Exception e) { Console.WriteLine(e.ToString()); Console.WriteLine("Problem in checkAndFix()"); }
+        }
+
     }
+
     /// <summary>
-    /// Misplacements-Counted-Array Container class Ends here
+    /// Priority Queue ends here
     /// </summary>
 
 
-    
 
 
 
 
-
-    
-    static class EightPuzzleGoal {
+    static class EightPuzzleGoal
+    {
         public static byte[] goalTiles = { 1, 2, 3, 4, 5, 6, 7, 8, 0 };
     }
 
@@ -343,7 +408,7 @@ namespace _8_Puzzle_From_Java
         {
             try
             {
-                
+
                 //Declare necessary variables
                 MyHashSet history = new MyHashSet();
                 //Console.WriteLine("---Hashset created");
@@ -370,31 +435,38 @@ namespace _8_Puzzle_From_Java
                 Console.WriteLine("Number of inversions = " + inv_count);
                 int c = 1;
                 //Console.WriteLine("---priority container created");
-                while (mainState.getNumberOfMisplacements() != 0)
+                while (mainState.getNumberOfMisplacement != 0)
                 {
                     //Console.WriteLine("--Begin loop--");
-                    MinimumMisplacedPriorityQueueContainer queue = new MinimumMisplacedPriorityQueueContainer();
+                    customizedPriorityQueue<MisplacementCountedArray> queue = new customizedPriorityQueue<MisplacementCountedArray>();
                     //Console.WriteLine("Step number : " + c++);
                     //Making successor states (adapting from online resource) 
                     //Courtesy : EightPuzzle.java file found in lab(made by an anonymous person)
-                    MisplacementCountedArray stateS = mainState.moveS(mainState); if (stateS != null) { queue.add(stateS); }
-                    MisplacementCountedArray stateN = mainState.moveN(mainState);if (stateN != null) queue.add(stateN);
-                    MisplacementCountedArray stateE = mainState.moveE(mainState); if (stateE != null) queue.add(stateE);
-                    MisplacementCountedArray stateW = mainState.moveW(mainState); if (stateW != null) queue.add(stateW);
+                    MisplacementCountedArray stateS = mainState.moveS(mainState); if (stateS != null) { queue.Enqueue(stateS); }
+                    MisplacementCountedArray stateN = mainState.moveN(mainState); if (stateN != null) queue.Enqueue(stateN);
+                    MisplacementCountedArray stateE = mainState.moveE(mainState); if (stateE != null) queue.Enqueue(stateE);
+                    MisplacementCountedArray stateW = mainState.moveW(mainState); if (stateW != null) queue.Enqueue(stateW);
                     //successors added... poll() and try to add the least one
                     MisplacementCountedArray temp = null;
-                    temp = queue.poll();
-                    if (!history.add(temp)) history.add(queue.poll());
+                    for (;;)
+                    {
+                        if (temp != null) break;
+                        MisplacementCountedArray temp2;
+                        temp2 = queue.poll();
+                        if (history.add(temp2)) { temp = temp2; }
+                        Console.WriteLine("poll() loop");
+                    }
+
                     //fetched the unvisited minimum successor state
                     //clear the queue;
                     queue.clear();
                     //change mainstate to new successor
                     mainState = temp;
-                    //Console.WriteLine("---New main state created");
-                    //mainState.print();
+                    Console.WriteLine("---New main state created");
+                    mainState.print();
                 }
                 //check if goal tiles reached. if reached, print results
-                if (mainState.getNumberOfMisplacements() == 0)
+                if (mainState.getNumberOfMisplacement == 0)
                 {
                     Console.WriteLine("Solved in " + history.getNumberOfElements());
                     mainState.print();
@@ -412,13 +484,14 @@ namespace _8_Puzzle_From_Java
         static void Main(string[] args)
         {
 
-            try {
-                
-                byte[] testArray = { 0,1,2,3,4,5,6,7,8 };
+            try
+            {
+
+                byte[] testArray = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
                 new solveEightPuzzleByMinimumMisplacedSuccessorState(testArray);
 
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
             }

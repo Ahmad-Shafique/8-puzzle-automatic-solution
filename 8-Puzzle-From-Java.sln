@@ -5,6 +5,11 @@ VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "8-Puzzle-From-Java", "8-Puzzle-From-Java\8-Puzzle-From-Java.csproj", "{9179427F-D927-4C00-997C-158458226437}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6A879A5C-9848-4481-89A2-BF3F2978F286}"
+	ProjectSection(SolutionItems) = preProject
+		PriorityQueue.cs = PriorityQueue.cs
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
