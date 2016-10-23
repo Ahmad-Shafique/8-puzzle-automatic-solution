@@ -199,8 +199,8 @@ namespace _8_Puzzle_From_Java
             MisplacementCountedArray newMCA = new MisplacementCountedArray(arr, EightPuzzleGoal.goalTiles);
             //newMCA.spaceIndex = newSpaceIndex;
             Debug.Assert(newMCA != null);
-            Console.Write("newMCA = ");
-            newMCA.print();
+            //Console.Write("newMCA = ");
+            //newMCA.print();
             return newMCA;
         }
 
@@ -302,7 +302,7 @@ namespace _8_Puzzle_From_Java
         //Constructor initializes the internal array with size 10
         public customizedPriorityQueue() { sizeOfQueue = 10; headOfQueue = 0;
             nodes = new MisplacementCountedArray[sizeOfQueue];
-            for (int i = 0; i < sizeOfQueue; i++) nodes[i] = new MisplacementCountedArray();
+            //for (int i = 0; i < sizeOfQueue; i++) nodes[i] = new MisplacementCountedArray();
         }
 
         //For inserting elements into the queue
@@ -463,12 +463,14 @@ namespace _8_Puzzle_From_Java
 
         //Return the top most element
         public MisplacementCountedArray poll() {
-            if (headOfQueue < numberOfNodes)
+            if (headOfQueue < numberOfNodes-1)
             {
+                //Console.WriteLine("head and tail : " + headOfQueue + " " + numberOfNodes);
                 Debug.Assert(nodes[headOfQueue] != null);
                 return nodes[headOfQueue++];
             }
             else {
+                //Console.WriteLine("head and tail : " + headOfQueue + " " + numberOfNodes);
                 Debug.Assert(nodes[headOfQueue] != null);
                 return nodes[headOfQueue];
             }
@@ -561,8 +563,10 @@ namespace _8_Puzzle_From_Java
                     MisplacementCountedArray stateW = mainState.moveW(mainState);
                     if (stateW != null && !history.contains(stateW)) queue.Enqueue(stateW);
                     //successors added... poll() and try to add the least one
+                    //Console.WriteLine("poll() begin");
                     MisplacementCountedArray temp = queue.poll();
-                    
+                    //Console.WriteLine("poll() End");
+
                     //fetched the unvisited minimum successor state
                     //clear the queue;
                     queue.clear();
@@ -595,45 +599,45 @@ namespace _8_Puzzle_From_Java
             {
 
                 byte[] testArray1 = { 0, 2,1, 3, 4, 5, 6, 7, 8 };
-                /*
-                byte[] testArray2 = { 0, 1,3,2, 4, 5, 6, 7, 8 };
-                byte[] testArray3 = { 0, 1, 2,4,3 ,5, 6, 7, 8 };
-                byte[] testArray4 = { 0, 1, 2, 3, 5,4, 6, 7, 8 };
-                byte[] testArray5 = { 0, 1, 2, 3, 4, 6,5, 7, 8 };
+                
+                //byte[] testArray2 = { 0, 1,3,2, 4, 5, 6, 7, 8 };
+                //byte[] testArray3 = { 0, 1, 2,4,3 ,5, 6, 7, 8 };
+                //byte[] testArray4 = { 0, 1, 2, 3, 5,4, 6, 7, 8 };
+                //byte[] testArray5 = { 0, 1, 2, 3, 4, 6,5, 7, 8 };
 
-                new Random().Shuffle(testArray1);
-                new Random().Shuffle(testArray2);
-                new Random().Shuffle(testArray3);
-                new Random().Shuffle(testArray4);
-                new Random().Shuffle(testArray5);
+                //new Random().Shuffle(testArray1);
+                //new Random().Shuffle(testArray2);
+                //new Random().Shuffle(testArray3);
+                //new Random().Shuffle(testArray4);
+                //new Random().Shuffle(testArray5);
 
-                MisplacementCountedArray mca1 = new MisplacementCountedArray(testArray1, EightPuzzleGoal.goalTiles);
-                MisplacementCountedArray mca2 = new MisplacementCountedArray(testArray2, EightPuzzleGoal.goalTiles);
-                MisplacementCountedArray mca3 = new MisplacementCountedArray(testArray3, EightPuzzleGoal.goalTiles);
-                MisplacementCountedArray mca4 = new MisplacementCountedArray(testArray4, EightPuzzleGoal.goalTiles);
-                MisplacementCountedArray mca5 = new MisplacementCountedArray(testArray5, EightPuzzleGoal.goalTiles);
+                //MisplacementCountedArray mca1 = new MisplacementCountedArray(testArray1, EightPuzzleGoal.goalTiles);
+                //MisplacementCountedArray mca2 = new MisplacementCountedArray(testArray2, EightPuzzleGoal.goalTiles);
+                //MisplacementCountedArray mca3 = new MisplacementCountedArray(testArray3, EightPuzzleGoal.goalTiles);
+                //MisplacementCountedArray mca4 = new MisplacementCountedArray(testArray4, EightPuzzleGoal.goalTiles);
+                //MisplacementCountedArray mca5 = new MisplacementCountedArray(testArray5, EightPuzzleGoal.goalTiles);
 
-                mca1.print();
-                mca2.print();
-                mca3.print();
-                mca4.print();
-                mca5.print();
+                //mca1.print();
+                //mca2.print();
+                //mca3.print();
+                //mca4.print();
+                //mca5.print();
 
                 
-                customizedPriorityQueue history = new customizedPriorityQueue();
-                if (history.Enqueue(mca1)) history.poll().print();
-                if (history.Enqueue(mca2)) history.poll().print();
-                if (history.Enqueue(mca3)) history.poll().print();
-                if (history.Enqueue(mca4)) history.poll().print();
-                if (history.Enqueue(mca5)) history.poll().print();
+                //customizedPriorityQueue history = new customizedPriorityQueue();
+                //history.Enqueue(mca1);
+                //history.Enqueue(mca2);
+                //if (history.Enqueue(mca3)) history.poll().print();
+                //if (history.Enqueue(mca4)) history.poll().print();
+                //if (history.Enqueue(mca5)) history.poll().print();
 
-                MyHashSet hs = new MyHashSet();
-                hs.add(mca1);
-                hs.add(mca2);
-                hs.add(mca3);
-                hs.add(mca4);
-                hs.add(mca5);
-                */
+                //MyHashSet hs = new MyHashSet();
+                //hs.add(mca1);
+                //hs.add(mca2);
+                //hs.add(mca3);
+                //hs.add(mca4);
+                //hs.add(mca5);
+
 
 
                 //history.poll().print();
@@ -642,25 +646,26 @@ namespace _8_Puzzle_From_Java
                 //history.poll().print();
                 //history.poll().print();
 
-                new Random().Shuffle(testArray1);
-                MisplacementCountedArray mca1 = new MisplacementCountedArray(testArray1, EightPuzzleGoal.goalTiles);
-                customizedPriorityQueue queue = new customizedPriorityQueue();
+                //new Random().Shuffle(testArray1);
+                //MisplacementCountedArray mca1 = new MisplacementCountedArray(testArray1, EightPuzzleGoal.goalTiles);
+                //customizedPriorityQueue queue = new customizedPriorityQueue();
+                //mca1.print();
 
-                MisplacementCountedArray moveS = mca1.moveS(mca1);
-                MisplacementCountedArray moveN = mca1.moveN(mca1);
-                MisplacementCountedArray moveE = mca1.moveE(mca1);
-                MisplacementCountedArray moveW = mca1.moveW(mca1);
-                if (moveS != null ) queue.Enqueue(moveS);
-                if (moveN != null) queue.Enqueue(moveN);
-                if (moveE != null ) queue.Enqueue(moveE);
-                if (moveW != null ) queue.Enqueue(moveW);
+                //MisplacementCountedArray moveS = mca1.moveS(mca1);
+                //MisplacementCountedArray moveN = mca1.moveN(mca1);
+                //MisplacementCountedArray moveE = mca1.moveE(mca1);
+                //MisplacementCountedArray moveW = mca1.moveW(mca1);
+                //if (moveS != null ) queue.Enqueue(moveS);
+                //if (moveN != null) queue.Enqueue(moveN);
+                //if (moveE != null ) queue.Enqueue(moveE);
+                //if (moveW != null ) queue.Enqueue(moveW);
 
-                queue.poll().print();
-                queue.poll().print();
-                queue.poll().print();
-                queue.poll().print();
+                //queue.poll().print();
+                //queue.poll().print();
+                //queue.poll().print();
+                //queue.poll().print();
 
-                //new solveEightPuzzleByMinimumMisplacedSuccessorState(testArray1);
+                new solveEightPuzzleByMinimumMisplacedSuccessorState(testArray1);
 
             }
             catch (Exception e)
