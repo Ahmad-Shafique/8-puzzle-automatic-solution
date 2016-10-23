@@ -197,8 +197,10 @@ namespace _8_Puzzle_From_Java
             Array.Copy(mca.arrayAccessor, arr, 9);
             swap(arr, originalSpaceIndex, newSpaceIndex);
             MisplacementCountedArray newMCA = new MisplacementCountedArray(arr, EightPuzzleGoal.goalTiles);
-            newMCA.spaceIndex = newSpaceIndex;
+            //newMCA.spaceIndex = newSpaceIndex;
             Debug.Assert(newMCA != null);
+            Console.Write("newMCA = ");
+            newMCA.print();
             return newMCA;
         }
 
@@ -234,7 +236,7 @@ namespace _8_Puzzle_From_Java
         }
 
         //Function to print the state
-        public void print() { Console.Write("Main state = "); for (int i = 0; i < array.Length; i += 3) Console.Write(array[i] + " " + array[i + 1] + " " + array[i + 2] + " "); Console.WriteLine(); }
+        public void print() { Console.Write("Space index = "+ spaceIndex+"::"); for (int i = 0; i < array.Length; i += 3) Console.Write(array[i] + " " + array[i + 1] + " " + array[i + 2] + " "); Console.WriteLine(); }
 
     }
     /// <summary>
@@ -298,96 +300,148 @@ namespace _8_Puzzle_From_Java
         MisplacementCountedArray[] nodes;
 
         //Constructor initializes the internal array with size 10
-        public customizedPriorityQueue() { sizeOfQueue = 10;
-            //////nodes = new MisplacementCountedArray[sizeOfQueue];
-            //////for (int i = 0; i < sizeOfQueue; i++) nodes[i] = new MisplacementCountedArray();
+        public customizedPriorityQueue() { sizeOfQueue = 10; headOfQueue = 0;
+            nodes = new MisplacementCountedArray[sizeOfQueue];
+            for (int i = 0; i < sizeOfQueue; i++) nodes[i] = new MisplacementCountedArray();
         }
 
         //For inserting elements into the queue
-        public void Enqueue(MisplacementCountedArray node)
+
+        public bool Enqueue(MisplacementCountedArray node)
         {
+            
             Debug.Assert(node != null);
-            try
+            if(numberOfNodes >= 2)
             {
-                
-                //Make sure insertion index is not negative
-                Debug.Assert(numberOfNodes >= 0);
-
-                if(numberOfNodes<2)
+                int i;
+                for(i=(int)headOfQueue; i<(int)numberOfNodes; i++)
                 {
-                    //Queue empty, insert node directly
-                    Debug.Assert(node != null);
-                    Debug.Assert(numberOfNodes >= 0);
-                    if (numberOfNodes == 0) nodes[numberOfNodes++] = node;
-                    //Queue has one element , check priority and insert accordingly
-                    else
+                    if (node.getNumberOfMisplacement < nodes[i].getNumberOfMisplacement)
                     {
-                        Debug.Assert(nodes[0] != null);
-                        //if(numberOfNodes)Debug.Assert(nodes[0].getNumberOfMisplacement > node.getNumberOfMisplacement);
-                        if (nodes[0].getNumberOfMisplacement > node.getNumberOfMisplacement)
-                        {
-                            MisplacementCountedArray temp;
-                            numberOfNodes++;
-                            temp = nodes[0];
-                            //Console.WriteLine("Entered if");
-                            temp.print();
-                            nodes[1] = temp;
-                            Console.Write("-------");
-                            nodes[1].print();
-                            nodes[0] = node;
-                            Debug.Assert(nodes[0] != null);
-                            Debug.Assert(nodes[1] != null);
-                            Debug.Assert(node != null);
-                        }
-                        else
-                        {
-                            nodes[0] = node;
-                            numberOfNodes++;
-                            Debug.Assert(nodes[0] != null);
-                        }
+                        for (int j = (int)numberOfNodes; j > i; j--) { nodes[j] = nodes[j - 1]; Debug.Assert(nodes[j] != null); }
+                        //Console.WriteLine("Elements moved ");
+                        break;
                     }
                 }
-                //Check if queue already has node/s
-                else if (numberOfNodes >= 2)
-                {
-                    //If the queue already has 2 nodes :
-                    //iterate to find the right place
-                    int i = 0,length=0;
-                    length = (int)numberOfNodes;
-                    Console.WriteLine(length);
-                    Debug.Assert(length > 0);
-                    Debug.Assert(nodes[0] != null);
-                    Debug.Assert(nodes[1] != null);
-                    for (; i < length ; i++)
-                    {
-                        Debug.Assert(nodes[i] != null);
-
-                        //place found , break from loop
-                        if (nodes[i] != null)
-                        {
-                            Debug.Assert(nodes[i] != null);
-                            if (nodes[i].getNumberOfMisplacement > node.getNumberOfMisplacement) break;
-                        }
-                    }
-                    //if the loop ended without breaking , insert at the end
-                    if (i >= numberOfNodes) { nodes[numberOfNodes++] = node; }
-                    //loop forcibly broken , move all nodes necessary and place the node
-                    else
-                    {
-                        Debug.Assert(node != null);
-                        for (int j =(int) numberOfNodes; j > i; j--) nodes[j] = nodes[j - 1];
-                        nodes[i] = node; numberOfNodes++;
-                    }
-
-                }
-                //queue doesn't have more than 2 nodes
-                
-                //Function to remove null element , if existing
-                //checkAndFix();
+                nodes[i] = node;
+                //if(i<numberOfNodes) Console.WriteLine("Inserted in between ");
+                //else Console.WriteLine("Inserted at the end ");
+                numberOfNodes++;
+                return true;
             }
-            catch (Exception e) { Console.WriteLine(e.ToString()); Console.WriteLine("Problem enqueing elements"); }
-
+            else
+            {
+                if (numberOfNodes == 0)
+                {
+                    nodes[numberOfNodes++] = node;
+                    //Console.WriteLine("Inserted at the beginning ");
+                    Debug.Assert(nodes[0] != null);
+                }
+                else
+                {
+                    if (node.getNumberOfMisplacement < nodes[0].getNumberOfMisplacement)
+                    {
+                        nodes[numberOfNodes++] = nodes[0];
+                        nodes[0] = node;
+                        Debug.Assert(nodes[0] != null);
+                        Debug.Assert(nodes[1] != null);
+                        //Console.WriteLine("Inserted second place position 1 ");
+                    }
+                    else
+                    {
+                        nodes[numberOfNodes++] = node;
+                        Debug.Assert(nodes[numberOfNodes - 1] != null);
+                        //Console.WriteLine("Inserted second place position 1 ");
+                    }
+                }
+                return true;
+            }
         }
+
+        //////public void Enqueue(MisplacementCountedArray node)
+        //////{
+        //////    Debug.Assert(node != null);
+        //////    try
+        //////    {
+                
+        //////        //Make sure insertion index is not negative
+        //////        Debug.Assert(numberOfNodes >= 0);
+
+        //////        if(numberOfNodes<2)
+        //////        {
+        //////            //Queue empty, insert node directly
+        //////            Debug.Assert(node != null);
+        //////            Debug.Assert(numberOfNodes >= 0);
+        //////            if (numberOfNodes == 0) nodes[numberOfNodes++] = node;
+        //////            //Queue has one element , check priority and insert accordingly
+        //////            else
+        //////            {
+        //////                Debug.Assert(nodes[0] != null);
+        //////                //if(numberOfNodes)Debug.Assert(nodes[0].getNumberOfMisplacement > node.getNumberOfMisplacement);
+        //////                if (nodes[0].getNumberOfMisplacement > node.getNumberOfMisplacement)
+        //////                {
+        //////                    MisplacementCountedArray temp;
+        //////                    numberOfNodes++;
+        //////                    temp = nodes[0];
+        //////                    //Console.WriteLine("Entered if");
+        //////                    temp.print();
+        //////                    nodes[1] = temp;
+        //////                    Console.Write("-------");
+        //////                    nodes[1].print();
+        //////                    nodes[0] = node;
+        //////                    Debug.Assert(nodes[0] != null);
+        //////                    Debug.Assert(nodes[1] != null);
+        //////                    Debug.Assert(node != null);
+        //////                }
+        //////                else
+        //////                {
+        //////                    nodes[0] = node;
+        //////                    numberOfNodes++;
+        //////                    Debug.Assert(nodes[0] != null);
+        //////                }
+        //////            }
+        //////        }
+        //////        //Check if queue already has node/s
+        //////        else if (numberOfNodes >= 2)
+        //////        {
+        //////            //If the queue already has 2 nodes :
+        //////            //iterate to find the right place
+        //////            int i = 0,length=0;
+        //////            length = (int)numberOfNodes;
+        //////            Console.WriteLine(length);
+        //////            Debug.Assert(length > 0);
+        //////            Debug.Assert(nodes[0] != null);
+        //////            Debug.Assert(nodes[1] != null);
+        //////            for (; i < length ; i++)
+        //////            {
+        //////                Debug.Assert(nodes[i] != null);
+
+        //////                //place found , break from loop
+        //////                if (nodes[i] != null)
+        //////                {
+        //////                    Debug.Assert(nodes[i] != null);
+        //////                    if (nodes[i].getNumberOfMisplacement > node.getNumberOfMisplacement) break;
+        //////                }
+        //////            }
+        //////            //if the loop ended without breaking , insert at the end
+        //////            if (i >= numberOfNodes) { nodes[numberOfNodes++] = node; }
+        //////            //loop forcibly broken , move all nodes necessary and place the node
+        //////            else
+        //////            {
+        //////                Debug.Assert(node != null);
+        //////                for (int j =(int) numberOfNodes; j > i; j--) nodes[j] = nodes[j - 1];
+        //////                nodes[i] = node; numberOfNodes++;
+        //////            }
+
+        //////        }
+        //////        //queue doesn't have more than 2 nodes
+                
+        //////        //Function to remove null element , if existing
+        //////        //checkAndFix();
+        //////    }
+        //////    catch (Exception e) { Console.WriteLine(e.ToString()); Console.WriteLine("Problem enqueing elements"); }
+
+        //////}
 
 
         //Increase queue size by 10
@@ -498,22 +552,17 @@ namespace _8_Puzzle_From_Java
                     //Making successor states (adapting from online resource) 
                     //Courtesy : EightPuzzle.java file found in lab(made by an anonymous person)
                     Debug.Assert(mainState != null);
-                    MisplacementCountedArray stateS = mainState.moveS(mainState); if (stateS != null && !history.contains(stateS)) queue.Enqueue(stateS); 
-                    MisplacementCountedArray stateN = mainState.moveN(mainState); if (stateN != null && !history.contains(stateN)) queue.Enqueue(stateN);
-                    MisplacementCountedArray stateE = mainState.moveE(mainState); if (stateE != null && !history.contains(stateE)) queue.Enqueue(stateE);
-                    MisplacementCountedArray stateW = mainState.moveW(mainState); if (stateW != null && !history.contains(stateW)) queue.Enqueue(stateW);
+                    MisplacementCountedArray stateS = mainState.moveS(mainState);
+                    if (stateS != null && !history.contains(stateS)) queue.Enqueue(stateS); 
+                    MisplacementCountedArray stateN = mainState.moveN(mainState);
+                    if (stateN != null && !history.contains(stateN)) queue.Enqueue(stateN);
+                    MisplacementCountedArray stateE = mainState.moveE(mainState);
+                    if (stateE != null && !history.contains(stateE)) queue.Enqueue(stateE);
+                    MisplacementCountedArray stateW = mainState.moveW(mainState);
+                    if (stateW != null && !history.contains(stateW)) queue.Enqueue(stateW);
                     //successors added... poll() and try to add the least one
-                    MisplacementCountedArray temp = null;
-                    for (;;)
-                    {
-                        if (temp != null) break;
-                        MisplacementCountedArray temp2;
-                        temp2 = queue.poll();
-                        Debug.Assert(temp2 != null);
-                        if (history.add(temp2)) { temp = temp2; }
-                        Console.WriteLine("poll() loop");
-                    }
-
+                    MisplacementCountedArray temp = queue.poll();
+                    
                     //fetched the unvisited minimum successor state
                     //clear the queue;
                     queue.clear();
@@ -546,6 +595,7 @@ namespace _8_Puzzle_From_Java
             {
 
                 byte[] testArray1 = { 0, 2,1, 3, 4, 5, 6, 7, 8 };
+                /*
                 byte[] testArray2 = { 0, 1,3,2, 4, 5, 6, 7, 8 };
                 byte[] testArray3 = { 0, 1, 2,4,3 ,5, 6, 7, 8 };
                 byte[] testArray4 = { 0, 1, 2, 3, 5,4, 6, 7, 8 };
@@ -571,14 +621,46 @@ namespace _8_Puzzle_From_Java
 
                 
                 customizedPriorityQueue history = new customizedPriorityQueue();
-                history.Enqueue(mca1);
-                //history.Enqueue(mca2);
-                //history.Enqueue(mca3);
-                //history.Enqueue(mca4);
-                //history.Enqueue(mca5);
-                
+                if (history.Enqueue(mca1)) history.poll().print();
+                if (history.Enqueue(mca2)) history.poll().print();
+                if (history.Enqueue(mca3)) history.poll().print();
+                if (history.Enqueue(mca4)) history.poll().print();
+                if (history.Enqueue(mca5)) history.poll().print();
 
-                //new solveEightPuzzleByMinimumMisplacedSuccessorState(testArray);
+                MyHashSet hs = new MyHashSet();
+                hs.add(mca1);
+                hs.add(mca2);
+                hs.add(mca3);
+                hs.add(mca4);
+                hs.add(mca5);
+                */
+
+
+                //history.poll().print();
+                //history.poll().print();
+                //history.poll().print();
+                //history.poll().print();
+                //history.poll().print();
+
+                new Random().Shuffle(testArray1);
+                MisplacementCountedArray mca1 = new MisplacementCountedArray(testArray1, EightPuzzleGoal.goalTiles);
+                customizedPriorityQueue queue = new customizedPriorityQueue();
+
+                MisplacementCountedArray moveS = mca1.moveS(mca1);
+                MisplacementCountedArray moveN = mca1.moveN(mca1);
+                MisplacementCountedArray moveE = mca1.moveE(mca1);
+                MisplacementCountedArray moveW = mca1.moveW(mca1);
+                if (moveS != null ) queue.Enqueue(moveS);
+                if (moveN != null) queue.Enqueue(moveN);
+                if (moveE != null ) queue.Enqueue(moveE);
+                if (moveW != null ) queue.Enqueue(moveW);
+
+                queue.poll().print();
+                queue.poll().print();
+                queue.poll().print();
+                queue.poll().print();
+
+                //new solveEightPuzzleByMinimumMisplacedSuccessorState(testArray1);
 
             }
             catch (Exception e)
