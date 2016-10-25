@@ -134,7 +134,7 @@ namespace _8_Puzzle_From_Java
         MisplacementCountedArray[] nodes;
 
         //Constructor initializes the internal array with size 10
-        public customizedPriorityQueue() { sizeOfQueue = 10; headOfQueue = 0;
+        public customizedPriorityQueue() { sizeOfQueue = 10; headOfQueue= 0;
             nodes = new MisplacementCountedArray[sizeOfQueue];
             //for (int i = 0; i < sizeOfQueue; i++) nodes[i] = new MisplacementCountedArray();
         }
@@ -216,7 +216,8 @@ namespace _8_Puzzle_From_Java
                 //Console.WriteLine("head and tail : " + headOfQueue + " " + numberOfNodes);
                 //checkAndFix();
                 Debug.Assert(nodes[headOfQueue] != null);
-                return nodes[headOfQueue++];
+                MisplacementCountedArray temp = nodes[headOfQueue++];
+                return temp;
             }
             else {
                 //Console.WriteLine("head and tail : " + headOfQueue + " " + numberOfNodes);
@@ -392,13 +393,13 @@ namespace _8_Puzzle_From_Java
             //Keep a storage for test cases
             MisplacementCountedArray[] mca = new MisplacementCountedArray[size];
 
-            byte[] baseCase = { 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+           byte[] baseCase = { 1, 1, 1, 1, 1, 1, 1, 1, 1 };
 
             //generate the test cases :
             int baseCaseIndexToChange = 8;
             for (int i = 0; i < size; i++) {
                 if (baseCase[baseCaseIndexToChange]>= 254) { baseCaseIndexToChange -= 1; }
-                baseCase[baseCaseIndexToChange] = (byte)(baseCase[baseCaseIndexToChange] + (i%255));
+                baseCase[baseCaseIndexToChange] = (byte)(i%255);
                 mca[i] = new MisplacementCountedArray(baseCase, EightPuzzleGoal.goalTiles);
                 
             }
@@ -440,7 +441,7 @@ namespace _8_Puzzle_From_Java
 
 
     /// <summary>
-    /// Resources taken from internet starts here
+    /// Resources taken from internet starts here2
     /// </summary>
     //Fisher-Yates algorithm to shuffle an array randomly
     //Courtesy : Matt Howels : stackoverflow.com/questions/108819
@@ -664,7 +665,7 @@ namespace _8_Puzzle_From_Java
 
                 new solveEightPuzzleByMinimumMisplacedSuccessorState(testArray1);
 
-                //driverProgramToTestHashset.HashTester(100);
+                //driverProgramToTestHashset.HashTester(1000);
 
             }
             catch (Exception e)
