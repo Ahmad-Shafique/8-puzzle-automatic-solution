@@ -504,24 +504,22 @@ namespace _8_Puzzle_From_Java
 
                 //Declare necessary variables
                 MyHashSet history = new MyHashSet();
-                Console.WriteLine("---Hashset created");
                 //Shuffle the array first
                 new Random().Shuffle(array);
-                Console.WriteLine("---Shuffling done");
                 int inv_count = inversionCountingClass.getInversionCount(array);
                 //Console.WriteLine("---Inversion counted");
                 //Looking for solvable array
                 while (inv_count % 2 != 0)
                 {
                     new Random().Shuffle(array);
-                    //Console.WriteLine("---Shuffling done");
+
                     inv_count = inversionCountingClass.getInversionCount(array);
-                    //Console.WriteLine("---Inversion counted");
+
                 }
                 //=============solvable state found... start solving===============
                 //Put the array in a new state object
                 MisplacementCountedArray mainState = new MisplacementCountedArray(array, EightPuzzleGoal.goalTiles);
-                Console.WriteLine("---Mainstate created");
+
                 //print state
                 mainState.print();
                 Debug.Assert(mainState != null);
@@ -530,34 +528,32 @@ namespace _8_Puzzle_From_Java
                 int c = 1;
                 while (mainState.getNumberOfMisplacement != 0)
                 {
-                    //Console.WriteLine("--Begin loop--");
                     customizedPriorityQueue queue = new customizedPriorityQueue();
-                    Console.WriteLine("---priority container created");
-                    //Console.WriteLine("Step number : " + c++);
+
                     //Making successor states (adapting from online resource) 
                     //Courtesy : EightPuzzle.java file found in lab(made by an anonymous person)
                     Debug.Assert(mainState != null);
                     MisplacementCountedArray stateS = mainState.moveS(mainState);
-                    if (stateS != null && !history.contains(stateS)) queue.Enqueue(stateS); 
+                    if (stateS != null && !history.contains(stateS)) queue.Enqueue(stateS);
                     MisplacementCountedArray stateN = mainState.moveN(mainState);
-                    if (stateN != null && !history.contains(stateN)) queue.Enqueue(stateN);
+                    if (stateN != null && !history.contains(stateN)) queue.Enqueue(stateN); 
                     MisplacementCountedArray stateE = mainState.moveE(mainState);
                     if (stateE != null && !history.contains(stateE)) queue.Enqueue(stateE);
                     MisplacementCountedArray stateW = mainState.moveW(mainState);
-                    if (stateW != null && !history.contains(stateW)) queue.Enqueue(stateW);
-                    //successors added... poll() and try to add the least one
-                    //Console.WriteLine("poll() begin");
-                    MisplacementCountedArray temp = queue.poll();
-                    //Console.WriteLine("poll() End");
+                    if (stateW != null && !history.contains(stateW)) queue.Enqueue(stateW); 
+                    Console.WriteLine();
 
+                    //successors added... poll() and try to add the least one
+                    MisplacementCountedArray temp = queue.poll();
                     history.add(temp);
+
                     //fetched the unvisited minimum successor state
                     //clear the queue;
                     queue.clear();
-                    Console.WriteLine("Queue clear");
+
                     //change mainstate to new successor
                     mainState = temp;
-                    Console.WriteLine("---New main state created");
+
                     Debug.Assert(mainState != null);
                     mainState.print();
                 }
@@ -597,71 +593,6 @@ namespace _8_Puzzle_From_Java
             {
 
                 byte[] testArray1 = { 0, 2,1, 3, 4, 5, 6, 7, 8 };
-
-                //byte[] testArray2 = { 0, 1,3,2, 4, 5, 6, 7, 8 };
-                //byte[] testArray3 = { 0, 1, 2,4,3 ,5, 6, 7, 8 };
-                //byte[] testArray4 = { 0, 1, 2, 3, 5,4, 6, 7, 8 };
-                //byte[] testArray5 = { 0, 1, 2, 3, 4, 6,5, 7, 8 };
-
-                //new Random().Shuffle(testArray1);
-                //new Random().Shuffle(testArray2);
-                //new Random().Shuffle(testArray3);
-                //new Random().Shuffle(testArray4);
-                //new Random().Shuffle(testArray5);
-
-                //MisplacementCountedArray mca1 = new MisplacementCountedArray(testArray1, EightPuzzleGoal.goalTiles);
-                //MisplacementCountedArray mca2 = new MisplacementCountedArray(testArray2, EightPuzzleGoal.goalTiles);
-                //MisplacementCountedArray mca3 = new MisplacementCountedArray(testArray3, EightPuzzleGoal.goalTiles);
-                //MisplacementCountedArray mca4 = new MisplacementCountedArray(testArray4, EightPuzzleGoal.goalTiles);
-                //MisplacementCountedArray mca5 = new MisplacementCountedArray(testArray5, EightPuzzleGoal.goalTiles);
-
-                //mca1.print();
-                //mca2.print();
-                //mca3.print();
-                //mca4.print();
-                //mca5.print();
-
-
-                //customizedPriorityQueue history = new customizedPriorityQueue();
-                //history.Enqueue(mca1);
-                //history.Enqueue(mca2);
-                //if (history.Enqueue(mca3)) history.poll().print();
-                //if (history.Enqueue(mca4)) history.poll().print();
-                //if (history.Enqueue(mca5)) history.poll().print();
-
-                //MyHashSet hs = new MyHashSet();
-                //hs.add(mca1);
-                //hs.add(mca2);
-                //hs.add(mca3);
-                //hs.add(mca4);
-                //hs.add(mca5);
-
-
-
-                //history.poll().print();
-                //history.poll().print();
-                //history.poll().print();
-                //history.poll().print();
-                //history.poll().print();
-
-                //new Random().Shuffle(testArray1);
-                //MisplacementCountedArray mca1 = new MisplacementCountedArray(testArray1, EightPuzzleGoal.goalTiles);
-                //customizedPriorityQueue queue = new customizedPriorityQueue();
-                //mca1.print();
-
-                //MisplacementCountedArray moveS = mca1.moveS(mca1);
-                //MisplacementCountedArray moveN = mca1.moveN(mca1);
-                //MisplacementCountedArray moveE = mca1.moveE(mca1);
-                //MisplacementCountedArray moveW = mca1.moveW(mca1);
-                //if (moveS != null ) queue.Enqueue(moveS);
-                //if (moveN != null) queue.Enqueue(moveN);
-                //if (moveE != null ) queue.Enqueue(moveE);
-                //if (moveW != null ) queue.Enqueue(moveW);
-
-                //queue.poll().print();
-                //queue.poll().print();
-                //queue.poll().print();
-                //queue.poll().print();
 
                 new solveEightPuzzleByMinimumMisplacedSuccessorState(testArray1);
 
