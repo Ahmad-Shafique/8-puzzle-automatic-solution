@@ -33,13 +33,13 @@ namespace _8_Puzzle_From_Java
         }
 
 
-        public static bool DFS(string mainState, int spaceIndex, Queue<string> history, Queue<string> uniqueStateStracker)
+        public static bool DFS(string mainState, int spaceIndex, Queue<string> history, HashSet<string> uniqueStateStracker)
         {
             
 
 
             //Console.WriteLine(mainState);
-            uniqueStateStracker.Enqueue(mainState);
+            uniqueStateStracker.Add(mainState);
 
             //Printing uniqueStateTracker's contained strings
             Console.WriteLine("Unique states visisted starts here");
@@ -59,6 +59,10 @@ namespace _8_Puzzle_From_Java
                 Console.WriteLine("Entering node 1");
                 string temp = mainState;
                 swap(temp, spaceIndex, spaceIndex - 3);
+
+                bool status = uniqueStateStracker.Contains(temp);
+                Console.WriteLine(status.ToString());
+
                 if (!uniqueStateStracker.Contains(temp))
                 {
                     flag = DFS(temp, spaceIndex,history, uniqueStateStracker);
@@ -71,6 +75,10 @@ namespace _8_Puzzle_From_Java
                 Console.WriteLine("Entering node 2");
                 string temp = mainState;
                 swap(temp, spaceIndex, spaceIndex +3);
+
+                bool status = uniqueStateStracker.Contains(temp);
+                Console.WriteLine(status.ToString());
+
                 if (!uniqueStateStracker.Contains(temp))
                 {
                     flag = DFS(temp, spaceIndex, history, uniqueStateStracker);
@@ -84,6 +92,10 @@ namespace _8_Puzzle_From_Java
                 Console.WriteLine("Entering node 3");
                 string temp = mainState;
                 swap(temp, spaceIndex, spaceIndex - 1);
+
+                bool status = uniqueStateStracker.Contains(temp);
+                Console.WriteLine(status.ToString());
+
                 if (!uniqueStateStracker.Contains(temp))
                 {
                     flag = DFS(temp, spaceIndex, history, uniqueStateStracker);
@@ -97,6 +109,10 @@ namespace _8_Puzzle_From_Java
                 Console.WriteLine("Entering node 4");
                 string temp = mainState;
                 swap(temp, spaceIndex, spaceIndex +1);
+
+                bool status = uniqueStateStracker.Contains(temp);
+                Console.WriteLine(status.ToString());
+
                 if (!uniqueStateStracker.Contains(temp))
                 {
                     flag = DFS(temp, spaceIndex, history, uniqueStateStracker);
@@ -132,7 +148,7 @@ namespace _8_Puzzle_From_Java
             spaceIndex = s.IndexOf("0");
 
             Queue<string> solution = new Queue<string>();
-            Queue<string> uniqueStateStracker = new Queue<string>();
+            HashSet<string> uniqueStateStracker = new HashSet<string>() ;
 
 
             //Preconditions testing for DFS
