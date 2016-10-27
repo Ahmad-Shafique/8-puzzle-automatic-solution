@@ -9,188 +9,150 @@ namespace _8_Puzzle_From_Java
 {
     class DFS_solution
     {
-        
-        public static void swap(byte[,] arr, int iIndex, int jIndex, int newIIndex , int newJIndex)
+        static void Print(string s)
         {
-            byte temp = arr[iIndex, jIndex];
-            arr[iIndex, jIndex] = arr[newIIndex, newJIndex];
-            arr[newIIndex, newJIndex] = temp;
-            Debug.Assert(arr[iIndex, jIndex] != 0);
+            for(int i=0; i<9; i += 3)Console.WriteLine(s[i] + " " + s[i + 1] + " " + s[i + 2]);
         }
 
-        static bool isGoalState(byte[,] array)
+        static void swap(string str, int indexOneToSwap, int indexTwoToSwap)
         {
-            Debug.Assert(array != null);
-            byte[] g = { 1,2,3,4,5,6,7,8,0};
-            int index = 0;
-            for(int i=0; i<3; i++)
-            {
-                for(int j=0; j<3; j++)
-                {
-                    if (array[i, j] != g[index++]) return false;
-                }
-            }
-            return true;
+            Console.WriteLine("Passed string = " + str);
+            char[] tempState = str.ToCharArray();
+            char temp = tempState[indexOneToSwap];
+            tempState[indexOneToSwap] = tempState[indexTwoToSwap];
+            tempState[indexTwoToSwap] = temp;
+            str = new string(tempState);
+            Debug.Assert(str != null);
+            Console.WriteLine("New string = " + str);
         }
 
-        public static bool DFS(byte[,] array,int spaceI,int spaceJ, Queue<byte[,]> history, Queue<byte[,]> uniqueStateStracker)
+        static bool isGoalState(string s)
         {
-            Console.WriteLine("Checking unique state tracker");
-            foreach(byte[,] arr in uniqueStateStracker)
+            if (s == "123456780") return true;
+            return false;
+        }
+
+
+        public static bool DFS(string mainState, int spaceIndex, Queue<string> history, Queue<string> uniqueStateStracker)
+        {
+            
+
+
+            //Console.WriteLine(mainState);
+            uniqueStateStracker.Enqueue(mainState);
+
+            //Printing uniqueStateTracker's contained strings
+            Console.WriteLine("Unique states visisted starts here");
+            foreach (string ss in uniqueStateStracker) Print(ss);
+            Console.WriteLine("Unique states visisted Ends here");
+
+            if (isGoalState(mainState))
             {
-                for (int i = 0; i < 3; i++)
-                {
-                    for (int j = 0; j < 3; j++)
-                    {
-                        Console.Write(arr[i, j] + " ");
-                    }
-                    Console.WriteLine();
-                }
-            }
-            Console.WriteLine("Ending Unique state tracker here\n");
-
-            for (int i = 0; i < 3; i++)
-            {
-                for (int j = 0; j < 3; j++)
-                {
-                    Console.Write(array[i, j] + " ");
-                }
-                Console.WriteLine();
-            }
-
-
-            uniqueStateStracker.Enqueue(array);
-
-            if (isGoalState(array))
-            {               
-                history.Enqueue(array);
+                history.Enqueue(mainState);
                 return true;
             }
             bool flag = false;
-            //Attempting down movement
-            if (spaceI + 1 <= 2)
+
+            //Attempting UP movement
+            if (spaceIndex > 2)
             {
                 Console.WriteLine("Entering node 1");
-                byte[,] temp = array.Clone() as byte[,];
-                swap(temp,spaceI,spaceJ,spaceI+1,spaceJ);
+                string temp = mainState;
+                swap(temp, spaceIndex, spaceIndex - 3);
                 if (!uniqueStateStracker.Contains(temp))
                 {
-                    flag = DFS(temp, spaceI + 1, spaceJ, history,uniqueStateStracker);
-                    if (flag) { history.Enqueue(array); return true; }
+                    flag = DFS(temp, spaceIndex,history, uniqueStateStracker);
+                    if (flag) { history.Enqueue(temp); return true; }
                 }
             }
-            //Attempting Left movement
-            if (spaceJ - 1 >= 0)
+            //Attempting DOWN movement
+            if (spaceIndex < 6)
             {
                 Console.WriteLine("Entering node 2");
-
-                byte[,] temp = array.Clone() as byte[,];
-                swap(temp, spaceI, spaceJ, spaceI, spaceJ-1);
+                string temp = mainState;
+                swap(temp, spaceIndex, spaceIndex +3);
                 if (!uniqueStateStracker.Contains(temp))
                 {
-                    flag = DFS(temp, spaceI, spaceJ-1, history,uniqueStateStracker);
-                    if (flag) { history.Enqueue(array); return true; }
+                    flag = DFS(temp, spaceIndex, history, uniqueStateStracker);
+                    if (flag) { history.Enqueue(temp); return true; }
                 }
             }
 
-            //Attempting Right movement
-            if (spaceJ + 1 <= 2)
+            //Attempting LEFT movement
+            if (spaceIndex % 3 > 0)
             {
                 Console.WriteLine("Entering node 3");
-
-                byte[,] temp = array.Clone() as byte[,];
-                swap(temp, spaceI, spaceJ, spaceI, spaceJ+1);
+                string temp = mainState;
+                swap(temp, spaceIndex, spaceIndex - 1);
                 if (!uniqueStateStracker.Contains(temp))
                 {
-                    flag = DFS(temp, spaceI, spaceJ+1, history,uniqueStateStracker);
-                    if (flag) { history.Enqueue(array); return true; }
+                    flag = DFS(temp, spaceIndex, history, uniqueStateStracker);
+                    if (flag) { history.Enqueue(temp); return true; }
                 }
             }
 
-            //Attempting Up movement
-            if (spaceI -1 >= 0)
+            //Attempting RIGHT movement
+            if (spaceIndex % 3 < 2)
             {
                 Console.WriteLine("Entering node 4");
-
-                byte[,] temp = array.Clone() as byte[,];
-                swap(temp, spaceI, spaceJ, spaceI - 1, spaceJ);
+                string temp = mainState;
+                swap(temp, spaceIndex, spaceIndex +1);
                 if (!uniqueStateStracker.Contains(temp))
                 {
-                    flag = DFS(temp, spaceI - 1, spaceJ, history,uniqueStateStracker);
-                    if (flag) { history.Enqueue(array); return true; }
+                    flag = DFS(temp, spaceIndex, history, uniqueStateStracker);
+                    if (flag) { history.Enqueue(temp); return true; }
                 }
             }
 
             return false;
         }
 
-
         static public void solveByRecursiveDFSImplementation(byte[] array)
         {
-            //Shuffling to return random array
+            int spaceIndex=0;
+
             new Random().Shuffle(array);
             int inv_count = inversionCountingClass.getInversionCount(array);
-            //Looking for solvable array
+
             while (inv_count % 2 != 0)
             {
                 new Random().Shuffle(array);
-
                 inv_count = inversionCountingClass.getInversionCount(array);
-
             }
-            Console.WriteLine("NumberOfInversions = "+inv_count);
 
-            //Casting the 1D array to a 2D array
-            int array_index = 0;
-            byte[,] mainState = new byte[3,3];
-            int spaceI=0, spaceJ=0;
-            for(int i=0; i<3; i++)
+            Console.WriteLine("Number of inversions = " + inv_count);
+
+            //Converting array to string
+            string s = "";
+            for (int i = 0; i < 9; i++) s += array[i];
+            Console.WriteLine(s);
+            Print(s);
+
+            //Finding spaceIndex
+            spaceIndex = s.IndexOf("0");
+
+            Queue<string> solution = new Queue<string>();
+            Queue<string> uniqueStateStracker = new Queue<string>();
+
+
+            //Preconditions testing for DFS
+            Debug.Assert(s != null);
+
+            //Start DFS solution
+            DFS(s, spaceIndex, solution,uniqueStateStracker);
+
+            //Postconditions for DFS
+            Debug.Assert(solution != null);
+
+            //Reversing recursive entries
+            solution.Reverse();
+
+            //Printing solution
+            foreach(string str in solution)
             {
-                for (int j = 0; j < 3; j++)
-                {
-                    mainState[i,j] = array[array_index++];
-                    if(mainState[i,j] == 0)
-                    {
-                        spaceI = i;
-                        spaceJ = j;
-                    }
-                }
+                Print(str);
             }
-
-            //Printing the new 2D array
-            for (int i = 0; i < 3; i++)
-            {
-                for (int j = 0; j < 3; j++)
-                {
-                    Console.Write(mainState[i,j] + " ");
-                }
-                Console.WriteLine();
-            }
-
-
-            Queue<byte[,]> history = new Queue<byte[,]>();
-            Queue<byte[,]> uniqueStateStracker = new Queue<byte[,]>();
-
-
-            DFS(mainState, spaceI, spaceJ, history, uniqueStateStracker);
-
-            history.Reverse();
-
-            Console.WriteLine("Number of steps = " + history.Count);
-            while (history.Count > 0)
-            {
-                byte[,] tempArr = history.Dequeue();
-                for (int i = 0; i < 3; i++)
-                {
-                    for (int j = 0; j < 3; j++)
-                    {
-                        Console.Write(tempArr[i,j] + " ");
-                    }
-                    Console.WriteLine();
-                }
-            }
-
-
         }
+
     }
 }
