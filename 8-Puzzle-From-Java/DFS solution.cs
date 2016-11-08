@@ -11,122 +11,169 @@ namespace _8_Puzzle_From_Java
     {
         static void Print(string s)
         {
-            for(int i=0; i<9; i += 3)Console.WriteLine(s[i] + " " + s[i + 1] + " " + s[i + 2]);
+            for(int i=0; i<9; i += 3)Console.WriteLine(s[i] + " " + s[i + 1] + " " + s[i + 2]); Console.WriteLine();
         }
 
-        static void swap(string str, int indexOneToSwap, int indexTwoToSwap)
+        static void swap(ref string str, int indexOneToSwap, int indexTwoToSwap)
         {
-            Console.WriteLine("Passed string = " + str);
+            //Console.WriteLine("Passed string = " + str);
             char[] tempState = str.ToCharArray();
             char temp = tempState[indexOneToSwap];
             tempState[indexOneToSwap] = tempState[indexTwoToSwap];
             tempState[indexTwoToSwap] = temp;
             str = new string(tempState);
             Debug.Assert(str != null);
-            Console.WriteLine("New string = " + str);
+            //Console.WriteLine("New string = " + str);
         }
 
         static bool isGoalState(string s)
         {
-            if (s == "123456780") return true;
+            if (s == "628354107") return true;
             return false;
         }
 
-
-        public static bool DFS(string mainState, int spaceIndex, Queue<string> history, HashSet<string> uniqueStateStracker)
+        static bool checkIfStringExistsInList(ref string str,ref List<string> uniqueStateStracker)
         {
-            
+            foreach (string s in uniqueStateStracker) if (str == s) { //Console.WriteLine("Found equal");
+                    //Console.WriteLine("looking for = "+ str);
+                    //Console.WriteLine("Found = "+s);
+                    //Console.WriteLine("Found match");
 
+                    //Console.WriteLine("Contained unique states");
+                    //foreach (string ss in uniqueStateStracker) Print(ss);
+
+                        return true;
+
+                
+                        }
+            return false; 
+        }
+
+        public static bool DFS(ref string mainState, ref Queue<string> solution, ref List<string> history)
+        {
+            Debug.Assert(mainState != null);
+            //Console.WriteLine("new mainstate : "  );
+            //Print(mainState);
+            int spaceIndex = mainState.IndexOf("0");
+            //Console.WriteLine("0 at  " + spaceIndex);
 
             //Console.WriteLine(mainState);
-            uniqueStateStracker.Add(mainState);
+            history.Add(mainState);
 
             //Printing uniqueStateTracker's contained strings
-            Console.WriteLine("Unique states visisted starts here");
-            foreach (string ss in uniqueStateStracker) Print(ss);
-            Console.WriteLine("Unique states visisted Ends here");
+            //Console.WriteLine("Unique states visisted starts here");
+            //foreach (string ss in uniqueStateStracker) Print(ss);
+            //Console.WriteLine("Unique states visisted Ends here");
 
             if (isGoalState(mainState))
             {
-                history.Enqueue(mainState);
+                solution.Enqueue(mainState);
                 return true;
             }
+
             bool flag = false;
-
+            
             //Attempting UP movement
-            if (spaceIndex > 2)
+            if (spaceIndex > 2 && !flag)
             {
-                Console.WriteLine("Entering node 1");
+                
                 string temp = mainState;
-                swap(temp, spaceIndex, spaceIndex - 3);
+                swap(ref temp, spaceIndex, spaceIndex - 3);
+                //Console.WriteLine("new mainstate = " + temp);
+                
+                //bool status = uniqueStateStracker.Contains(temp);
+                //Console.WriteLine(status.ToString());
 
-                bool status = uniqueStateStracker.Contains(temp);
-                Console.WriteLine(status.ToString());
-
-                if (!uniqueStateStracker.Contains(temp))
+                if (!checkIfStringExistsInList(ref temp,ref history))
                 {
-                    flag = DFS(temp, spaceIndex,history, uniqueStateStracker);
-                    if (flag) { history.Enqueue(temp); return true; }
+                    Console.WriteLine("0 going up");
+                    Console.WriteLine("new mainstate = ");
+                    Print(temp);
+                    flag = DFS(ref temp, ref solution, ref history);
+                    if (flag)
+                    { solution.Enqueue(temp); return true; }
                 }
             }
             //Attempting DOWN movement
-            if (spaceIndex < 6)
+            if (spaceIndex < 6 && !flag)
             {
-                Console.WriteLine("Entering node 2");
+                
                 string temp = mainState;
-                swap(temp, spaceIndex, spaceIndex +3);
+                swap(ref temp, spaceIndex, spaceIndex +3);
+                //Console.WriteLine("new mainstate = " + temp);
+                
+                //bool status = uniqueStateStracker.Contains(temp);
+                //Console.WriteLine(status.ToString());
 
-                bool status = uniqueStateStracker.Contains(temp);
-                Console.WriteLine(status.ToString());
-
-                if (!uniqueStateStracker.Contains(temp))
+                if (!checkIfStringExistsInList(ref temp,ref history))
                 {
-                    flag = DFS(temp, spaceIndex, history, uniqueStateStracker);
-                    if (flag) { history.Enqueue(temp); return true; }
+                    Console.WriteLine("0 going down");
+                    Console.WriteLine("new mainstate = ");
+                    Print(temp);
+                    flag = DFS(ref temp,ref solution, ref history);
+                    if (flag)
+                    { solution.Enqueue(temp); return true; }
                 }
             }
 
             //Attempting LEFT movement
-            if (spaceIndex % 3 > 0)
+            if (spaceIndex % 3 > 0 && !flag)
             {
-                Console.WriteLine("Entering node 3");
+                
                 string temp = mainState;
-                swap(temp, spaceIndex, spaceIndex - 1);
+                swap(ref temp, spaceIndex, spaceIndex - 1);
 
-                bool status = uniqueStateStracker.Contains(temp);
-                Console.WriteLine(status.ToString());
-
-                if (!uniqueStateStracker.Contains(temp))
+                //bool status = uniqueStateStracker.Contains(temp);
+                //Console.WriteLine(status.ToString());
+                //Console.WriteLine("new mainstate = " + temp);
+                
+                if (!checkIfStringExistsInList(ref temp,ref  history))
                 {
-                    flag = DFS(temp, spaceIndex, history, uniqueStateStracker);
-                    if (flag) { history.Enqueue(temp); return true; }
+                    Console.WriteLine("0 going left");
+                    Console.WriteLine("new mainstate = ");
+                    Print(temp);
+                    flag = DFS(ref temp,ref solution, ref history);
+                    if (flag)
+                    {
+                        solution.Enqueue(temp); return true; }
                 }
             }
 
             //Attempting RIGHT movement
-            if (spaceIndex % 3 < 2)
+            if (spaceIndex % 3 < 2 && !flag)
             {
-                Console.WriteLine("Entering node 4");
+               
                 string temp = mainState;
-                swap(temp, spaceIndex, spaceIndex +1);
+                swap(ref temp, spaceIndex, spaceIndex +1);
+                //Console.WriteLine("new mainstate = " + temp);
+                
+                //bool status = uniqueStateStracker.Contains(temp);
+                //Console.WriteLine(status.ToString());
 
-                bool status = uniqueStateStracker.Contains(temp);
-                Console.WriteLine(status.ToString());
-
-                if (!uniqueStateStracker.Contains(temp))
+                if (!checkIfStringExistsInList(ref temp,ref history))
                 {
-                    flag = DFS(temp, spaceIndex, history, uniqueStateStracker);
-                    if (flag) { history.Enqueue(temp); return true; }
+                    Console.WriteLine("0 going right");
+                    Console.WriteLine("new mainstate = ");
+                    Print(temp);
+                    flag = DFS(ref temp,ref solution,ref history);
+                    if (flag)
+                    {
+                        solution.Enqueue(temp); return true;
+                    }
                 }
             }
 
+            if (flag)
+            {
+                solution.Enqueue(mainState);
+                return true;
+            }
             return false;
         }
 
         static public void solveByRecursiveDFSImplementation(byte[] array)
         {
-            int spaceIndex=0;
-
+            /*
             new Random().Shuffle(array);
             int inv_count = inversionCountingClass.getInversionCount(array);
 
@@ -137,25 +184,24 @@ namespace _8_Puzzle_From_Java
             }
 
             Console.WriteLine("Number of inversions = " + inv_count);
-
+            
             //Converting array to string
             string s = "";
             for (int i = 0; i < 9; i++) s += array[i];
-            Console.WriteLine(s);
+            */
+            string s = "368124057";
+            //Console.WriteLine(s);
             Print(s);
 
-            //Finding spaceIndex
-            spaceIndex = s.IndexOf("0");
-
             Queue<string> solution = new Queue<string>();
-            HashSet<string> uniqueStateStracker = new HashSet<string>() ;
+            List<string> history = new List<string>() ;
 
 
             //Preconditions testing for DFS
             Debug.Assert(s != null);
 
             //Start DFS solution
-            DFS(s, spaceIndex, solution,uniqueStateStracker);
+            DFS(ref s,  ref solution,ref history);
 
             //Postconditions for DFS
             Debug.Assert(solution != null);
@@ -164,6 +210,7 @@ namespace _8_Puzzle_From_Java
             solution.Reverse();
 
             //Printing solution
+            Console.WriteLine("Solution being printed : ::::::::::::::::::::::::::::::");
             foreach(string str in solution)
             {
                 Print(str);
