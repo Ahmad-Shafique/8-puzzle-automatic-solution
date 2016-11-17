@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Diagnostics;
 
 namespace _8_Puzzle_From_Java
 {
-    class DFS_solution
+    class BFS_solution
     {
-        
+
         static void Print(string s)
         {
-            for(int i=0; i<9; i += 3)Console.WriteLine(s[i] + " " + s[i + 1] + " " + s[i + 2]); Console.WriteLine();
+            for (int i = 0; i < 9; i += 3) Console.WriteLine(s[i] + " " + s[i + 1] + " " + s[i + 2]); Console.WriteLine();
         }
 
         static void swap(ref string str, int indexOneToSwap, int indexTwoToSwap)
@@ -33,21 +33,22 @@ namespace _8_Puzzle_From_Java
             return false;
         }
 
-        static bool checkIfStringExistsInList(ref string str,ref List<string> uniqueStateStracker)
+        static bool checkIfStringExistsInList(ref string str, ref List<string> uniqueStateStracker)
         {
-            foreach (string s in uniqueStateStracker) if (str == s) { //Console.WriteLine("Found equal");
-                    //Console.WriteLine("looking for = "+ str);
-                    //Console.WriteLine("Found = "+s);
-                    //Console.WriteLine("Found match");
+            foreach (string s in uniqueStateStracker) if (str == s)
+                { //Console.WriteLine("Found equal");
+                  //Console.WriteLine("looking for = "+ str);
+                  //Console.WriteLine("Found = "+s);
+                  //Console.WriteLine("Found match");
 
                     //Console.WriteLine("Contained unique states");
                     //foreach (string ss in uniqueStateStracker) Print(ss);
 
-                        return true;
+                    return true;
 
-                
-                        }
-            return false; 
+
+                }
+            return false;
         }
 
         static string moveUP(string mainState)
@@ -106,7 +107,7 @@ namespace _8_Puzzle_From_Java
             return null;
         }
 
-        
+
 
         public static bool DFS(ref string mainState, ref Queue<string> solution)
         {
@@ -116,7 +117,7 @@ namespace _8_Puzzle_From_Java
             int spaceIndex = mainState.IndexOf("0");
             //Console.WriteLine("0 at  " + spaceIndex);
 
-            
+
 
             if (isGoalState(mainState))
             {
@@ -124,14 +125,14 @@ namespace _8_Puzzle_From_Java
                 return true;
             }
 
-            Stack<string> executionStack = new Stack<string>();
+            Queue<string> executionStack = new Queue<string>();
             List<string> uniqueStateTracker = new List<string>();
 
-            executionStack.Push(mainState);
+            executionStack.Enqueue(mainState);
 
             while (!isGoalState(mainState))
             {
-                string poppedMainState = executionStack.Pop();
+                string poppedMainState = executionStack.Dequeue();
 
                 if (isGoalState(poppedMainState))
                 {
@@ -143,26 +144,26 @@ namespace _8_Puzzle_From_Java
                 string down = moveDOWN(poppedMainState);
                 string left = moveLEFT(poppedMainState);
                 string right = moveRIGHT(poppedMainState);
-                
+
                 //Pushing unique child states into stack
-                if(up!=null || down!=null || left!=null || right != null)
+                if (up != null || down != null || left != null || right != null)
                 {
                     solution.Enqueue(poppedMainState);
                     uniqueStateTracker.Add(poppedMainState);
                     Print(poppedMainState);
-                    if (up!=null && (!(checkIfStringExistsInList(ref up,ref uniqueStateTracker)))) executionStack.Push(up);
-                    if (down != null && (!(checkIfStringExistsInList(ref down, ref uniqueStateTracker)))) executionStack.Push(down);
-                    if (left != null && (!(checkIfStringExistsInList(ref left, ref uniqueStateTracker)))) executionStack.Push(left);
-                    if (right != null && (!(checkIfStringExistsInList(ref right, ref uniqueStateTracker)))) executionStack.Push(right);
+                    if (up != null && (!(checkIfStringExistsInList(ref up, ref uniqueStateTracker)))) executionStack.Enqueue(up);
+                    if (down != null && (!(checkIfStringExistsInList(ref down, ref uniqueStateTracker)))) executionStack.Enqueue(down);
+                    if (left != null && (!(checkIfStringExistsInList(ref left, ref uniqueStateTracker)))) executionStack.Enqueue(left);
+                    if (right != null && (!(checkIfStringExistsInList(ref right, ref uniqueStateTracker)))) executionStack.Enqueue(right);
                 }
 
             }
             return false;
         }
 
-        static public void solveByIterativeDFSImplementation(byte[] array)
+        static public void solveByIterativeBFSImplementation(byte[] array)
         {
-            
+
             new Random().Shuffle(array);
             int inv_count = inversionCountingClass.getInversionCount(array);
 
@@ -173,11 +174,11 @@ namespace _8_Puzzle_From_Java
             }
 
             Console.WriteLine("Number of inversions = " + inv_count);
-            
+
             //Converting array to string
             string s = "";
             for (int i = 0; i < 9; i++) s += array[i];
-            
+
             //string s = "368124057";
             Print(s);
 
@@ -188,14 +189,14 @@ namespace _8_Puzzle_From_Java
             Debug.Assert(s != null);
 
             //Start DFS solution
-            DFS(ref s,  ref solution);
+            DFS(ref s, ref solution);
 
             //Postconditions for DFS
             Debug.Assert(solution != null);
 
             //Printing solution
             Console.WriteLine("Solution being printed : ::::::::::::::::::::::::::::::");
-            foreach(string str in solution)
+            foreach (string str in solution)
             {
                 Print(str);
             }
@@ -203,3 +204,4 @@ namespace _8_Puzzle_From_Java
 
     }
 }
+

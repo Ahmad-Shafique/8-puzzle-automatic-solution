@@ -20,8 +20,9 @@ namespace _8_Puzzle_From_Java
 
                 byte[] testArray1 = { 0, 2,1, 3, 4, 5, 6, 7, 8 };
 
+                BFS_solution.solveByIterativeBFSImplementation(testArray1);
 
-                DFS_solution.solveByRecursiveDFSImplementation(testArray1);
+                //DFS_solution.solveByIterativeDFSImplementation(testArray1);
 
                 //new solveEightPuzzleByMinimumMisplacedSuccessorState(testArray1);
                 //driverProgramToTestHashset.HashTester(1000);
