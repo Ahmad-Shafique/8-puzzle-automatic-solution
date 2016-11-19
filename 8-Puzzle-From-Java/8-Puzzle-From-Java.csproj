@@ -46,6 +46,7 @@
     <Compile Include="BFS_solution.cs" />
     <Compile Include="DFS solution.cs" />
     <Compile Include="Minimum State Solution.cs" />
+    <Compile Include="MinimumState_and_ManhattanDistanceSolution.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

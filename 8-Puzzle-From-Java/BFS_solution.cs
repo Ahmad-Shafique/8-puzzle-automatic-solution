@@ -185,13 +185,13 @@ namespace _8_Puzzle_From_Java
             Queue<string> solution = new Queue<string>();
 
 
-            //Preconditions testing for DFS
+            //Preconditions testing for BFS
             Debug.Assert(s != null);
 
-            //Start DFS solution
+            //Start BFS solution
             DFS(ref s, ref solution);
 
-            //Postconditions for DFS
+            //Postconditions for BFS
             Debug.Assert(solution != null);
 
             //Printing solution
