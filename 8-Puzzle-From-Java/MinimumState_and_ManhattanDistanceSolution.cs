@@ -122,39 +122,46 @@ namespace _8_Puzzle_From_Java
 
         static int ManhattanDistance(int originalIndex, int currentIndex)
         {
-            int x1 = originalIndex % 3;
-            int y1 = originalIndex / 3;
-            int x2 = currentIndex % 3;
-            int y2 = currentIndex / 3;
-            return Math.Abs(x1 - x2) + Math.Abs(y1 - y2);
+            int x1 = originalIndex/ 3;
+            int y1 = originalIndex% 3;
+            int x2 = currentIndex / 3;
+            int y2 = currentIndex % 3;
+            //Console.WriteLine("Original Coordinates :{4}:({0},{1})   , Current coordinates :{5}:({2},{3})", x1, y1, x2, y2,originalIndex,currentIndex);
+            int res= Math.Abs(x1 - x2) + Math.Abs(y1 - y2);
+            //Console.WriteLine("Distance between coordinates = ", res);
+            return res;
         }
 
         static int CalculateMisplacementValues(string str,int mode)
         {
             int totalValue = 0;
+            Console.WriteLine("current string = " + str);
             for(int i=0; i<9; i++)
             {
                 if(str[i] != i)
                 {
-                    char temp =(char) i;
+                    //char temp =(char) i;
                     //Take current index
+                    string temp = ""+i;
+                    //Console.WriteLine("String to check = " + temp);
                     int index = str.IndexOf(temp);
                     if (mode == 1)
                     {
                         totalValue += ManhattanDistance(i, index);
                     }
                     else totalValue += EuclideanDistance(i, index);
+                    //Console.WriteLine("total value = " + totalValue);
                 }
             }
+            Console.WriteLine("total value = " + totalValue);
             return totalValue;
         }
 
 
 
-        public static bool MinStateSolution(string mainState, int choice)
+        public static bool MinStateSolution(string mainState, int mode)
         {
             List<string> history = new List<string>();
-
 
             Debug.Assert(mainState != null);
             //Console.WriteLine("new mainstate : "  );
@@ -171,9 +178,7 @@ namespace _8_Puzzle_From_Java
                 return true;
             }
 
-            history
-                .Add(mainState);
-
+            history.Add(mainState);
 
             int iterationNumber = 0;
             while (!isGoalState(mainState))
@@ -192,16 +197,16 @@ namespace _8_Puzzle_From_Java
                 //Calculating minimum number of misplacements among child states
                 int upValue=-1, downValue=-1, leftValue=-1, rightValue=-1,min=99999;
 
-                if (up != null && !checkIfStringExistsInList(ref up,history)) { upValue = CalculateMisplacementValues(up, choice); if (upValue < min) min = upValue;
+                if (up != null && !checkIfStringExistsInList(ref up,history)) { upValue = CalculateMisplacementValues(up, mode); if (upValue < min) min = upValue;
                     //Console.WriteLine("up");Print(up);
                 }
-                if (down != null && !checkIfStringExistsInList(ref down,history)) { downValue = CalculateMisplacementValues(down, choice); if (downValue < min) min = downValue;
+                if (down != null && !checkIfStringExistsInList(ref down,history)) { downValue = CalculateMisplacementValues(down, mode); if (downValue < min) min = downValue;
                     //Console.WriteLine("down"); Print(down); 
                 }
-                if (left != null && !checkIfStringExistsInList(ref left,history)) { leftValue = CalculateMisplacementValues(left, choice); if (leftValue < min) min = leftValue;
+                if (left != null && !checkIfStringExistsInList(ref left,history)) { leftValue = CalculateMisplacementValues(left, mode); if (leftValue < min) min = leftValue;
                     //Console.WriteLine("left"); Print(left);
                 }
-                if (right != null && !checkIfStringExistsInList(ref right,history)) { rightValue = CalculateMisplacementValues(right, choice); if (rightValue < min) min = rightValue;
+                if (right != null && !checkIfStringExistsInList(ref right,history)) { rightValue = CalculateMisplacementValues(right, mode); if (rightValue < min) min = rightValue;
                     //Console.WriteLine("right"); Print(right);
                 }
                 //Calculation of minimum misplaced state end here
@@ -210,11 +215,35 @@ namespace _8_Puzzle_From_Java
                 //Console.WriteLine("recheck main state : ");
                 // Print(mainState);
 
+                Console.WriteLine("up {0} down {1} left {2} right {3}", upValue, downValue, leftValue, rightValue);
+
                 //Selecting the successor child 
-                if (upValue == min && upValue != -1) { mainState = up; Console.WriteLine("up chosen"); }
-                else if (downValue == min && downValue != -1) { mainState = down; Console.WriteLine("down chosen"); }
-                else if (leftValue == min && leftValue != -1) { mainState = left; Console.WriteLine("left chosen"); }
-                else if (rightValue == min && rightValue != -1) { mainState = right; Console.WriteLine("right chosen"); }
+                if (upValue == min) {
+                    if (upValue == -1)
+                    {
+                        Console.WriteLine("upValue == -1");
+                    }
+                    else {
+                        mainState = up; //Console.WriteLine("up chosen");
+                    }
+                }
+                else if (downValue == min) {
+                    if (downValue == -1) { Console.WriteLine("downValue = -1"); }
+                    else {
+                        mainState = down; Console.WriteLine("down chosen"); }
+                }
+                else if (leftValue == min) {
+                    if (leftValue == -1)
+                    {
+                        Console.WriteLine("leftValue = -1");
+                    }
+                    else {
+                        mainState = left; Console.WriteLine("left chosen");
+                    }
+                }
+                else if (rightValue == min && rightValue != -1) {
+                    mainState = right; Console.WriteLine("right chosen"); }
+                else Console.WriteLine("No successor chosen");
                 //successor chosen
 
                 Console.WriteLine("Successor chosen . New main state : ");
@@ -239,7 +268,7 @@ namespace _8_Puzzle_From_Java
 
         static public void Solve(byte[] array)
         {
-
+            /*
             new Random().Shuffle(array);
             int inv_count = inversionCountingClass.getInversionCount(array);
 
@@ -256,6 +285,11 @@ namespace _8_Puzzle_From_Java
             for (int i = 0; i < 9; i++) s += array[i];
 
             //string s = "368124057";
+            Print(s);
+            */
+            string s = "716485023";
+            //string s = "120345678";
+
             Print(s);
 
             Console.Write("\nSelect the technique to use : \n1 for Manhattan Distance\n2 for Euclidean distance\nAny other key to exit\n");
@@ -280,3 +314,4 @@ namespace _8_Puzzle_From_Java
 
     }
 }
+ 
