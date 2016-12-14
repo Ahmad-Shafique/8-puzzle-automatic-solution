@@ -109,10 +109,10 @@ namespace _8_Puzzle_From_Java
 
         static int EuclideanDistance(int originalIndex, int currentIndex)
         {
-            int x1 = originalIndex % 3;
-            int y1 = originalIndex / 3;
-            int x2 = currentIndex % 3;
-            int y2 = currentIndex / 3;
+            int x1 = originalIndex / 3;
+            int y1 = originalIndex % 3;
+            int x2 = currentIndex / 3;
+            int y2 = currentIndex % 3;
             double sqrDiff1 = Math.Abs(x1 - x2) * Math.Abs(x1 - x2);
             double sqrDiff2 = Math.Abs(y1 - y2) * Math.Abs(y1 - y2);
 
